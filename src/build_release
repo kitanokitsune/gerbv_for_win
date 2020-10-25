@@ -1,0 +1,26 @@
+#!/bin/sh
+# Release script for gerbv
+# (C) 2001-2005 Stefan Petersen (spe@stacken.kth.se)
+# $Id$
+
+eval "`grep ^VERSION configure.in`"
+RELEASE="gerbv-${VERSION}"
+CVS_TAG="RELEASE_`echo ${VERSION}|/bin/sed -e 'y/./_/'`"
+FILES2REMOVE="build_release rebuild_conf cvs-tag.sh files2tag.txt"
+
+RESULT=`grep -c :pserver:anonymous@cvs.sourceforge.net:[0-9]*/cvsroot/gerbv ${HOME}/.cvspass`
+
+if [[ $RESULT -eq 0 ]] ; then
+	echo You must login with anonymous login to get this to work!
+	exit;
+fi
+
+(cd /tmp ;\
+cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gerbv export -r ${CVS_TAG} -d ${RELEASE} gerbv ; \
+(cd ${RELEASE} ; rm -f ${FILES2REMOVE} ; \
+aclocal ; autoheader ; autoconf ; automake --copy --add-missing) ;\
+tar cf ${RELEASE}.tar ${RELEASE} ;\
+gzip ${RELEASE}.tar )
+
+cp /tmp/${RELEASE}.tar.gz .
+rm -rf /tmp/${RELEASE}.tar.gz /tmp/${RELEASE}

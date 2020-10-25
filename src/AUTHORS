@@ -1,0 +1,35 @@
+# Note:  This file is used to generate the entries i the 'credits' menu.
+#        As such, the format must be adhered to.  Format is:
+#
+# Name: Comment
+#
+# Lines starting with a '#' are considered comment lines.
+# Blank lines are allowed.
+
+Anders Eriksson: GTK+/X hacker and constructive ideas.
+
+Andreas Andersson aka Pitch: Drill file support hacker and constructive ideas.
+
+Dan McMahill: Build system, portability and bug fixes, misc. features
+
+David Carr
+
+Joerg Wunsch
+
+Joost Witteveen
+
+Juergen Haas
+
+Julian Lamb: Cairo conversion.  Many user interface and rs274-x improvements
+
+Sergey Alyoshin
+
+Stefan Petersen: Project founder, and main developer for many years
+
+Stuart Brorson: Layer statistics, release engineer, UI improvements
+
+Tomasz Motylewski
+
+Trevor Blackwell
+
+... and many others.

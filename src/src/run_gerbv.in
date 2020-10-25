@@ -1,0 +1,140 @@
+#!/bin/sh
+#
+
+# This is a wrapper script used to help gerbv find its scheme init file
+# when testing out gerbv prior to installation.
+
+# If the first argument is "-gdb" then run gerbv inside the gdb
+# debugger.  
+#
+# Use  --g-fatal-warnings to cause gtk-WARNING's to
+# abort.
+
+
+usage() {
+cat << EOF
+
+$0 - tests out gerbv prior to installation
+
+$0 [-gdb] [-h|--help] [--] [gerbv arguments]
+
+Options:
+
+  -gdb       - runs gerbv in the GDB debugger
+
+  -h|--help  - displays this message and exits
+
+  --         - halts all further option processing all additional options
+               are passed down to gerbv.
+
+
+See also:
+
+  $0 -- --help
+
+  for information on the gerbv options
+
+EOF
+}
+
+do_gdb=no
+while test $# -gt 0 ; do
+	case $1 in
+		-gdb)
+			do_gdb=yes
+			shift
+			;;
+
+		-h|--help)
+			usage
+			exit
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		-*)
+			echo "$0:  Unknown option $1"
+			echo "See $0 --help for more information."
+			exit 1
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+# We do this hack because if there is a libgerbv already installed in the
+# same location as some of the libs like gtk, then we will pick up the 
+# installed libgerbv at runtime instead of the one we just built.  This can
+# lead to extreme frustration when trying to understand why changes to the code
+# do not change the way the program works!  This makes sure we pick up our
+# newly built libgerbv first.
+#
+# This hack came from wcalc.
+
+LIBGERBV_DIR=@BUILDDIR@/.libs
+if test "X${LD_LIBRARY_PATH}" = "X" ; then
+	LD_LIBRARY_PATH=${LIBGERBV_DIR}
+else
+	LD_LIBRARY_PATH=${LIBGERBV_DIR}:${LD_LIBRARY_PATH}
+fi 
+export LD_LIBRARY_PATH
+echo "Set LD_LIBRARY_PATH to ${LD_LIBRARY_PATH}"
+
+if test "X${LD_RUN_PATH}" = "X" ; then
+	LD_RUN_PATH=${LIBGERBV_DIR}
+else
+	LD_RUN_PATH=${LIBGERBV_DIR}:${LD_RUN_PATH}
+fi 
+export LD_RUN_PATH
+echo "Set LD_RUN_PATH to ${LD_RUN_PATH}"
+
+if test "X${LD_PRELOAD}" = "X" ; then
+	LD_PRELOAD=${LIBGERBV_DIR}/libgerbv.so
+else
+	LD_PRELOAD=${LIBGERBV_DIR}/libgerbv.so:${LD_PRELOAD}
+fi 
+export LD_PRELOAD
+echo "Set LD_PRELOAD to ${LD_PRELOAD}"
+
+GERBV=@BUILDDIR@/gerbv
+
+mv -f ${GERBV} ${GERBV}.orig 
+sed \
+	-e 's;LD_LIBRARY_PATH="/;LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/;g' \
+	-e 's;LD_RUN_PATH="/;LD_RUN_PATH="${LD_RUN_PATH}:/;g' \
+	${GERBV}.orig > ${GERBV}
+
+chmod 755 ${GERBV}
+
+# End of shared lib hack
+
+
+if test $do_gdb = yes ; then
+	# Create a temp directory in a safe manner that is only accessible by us.
+	# This will allow for safe use of temporary files.
+	tmpd=${TMPDIR:-/tmp}/run_gerbv.$$
+	mkdir -p -m 0700 $tmpd
+	rc=$?
+	if test $rc -ne 0 ; then
+		echo "$0:  Unable to create temp directory $tmpd"
+		echo "Either the directory exists already or you do not have permissions"
+		exit 1
+	fi
+
+	tmpf=${tmpd}/run_gerbv.gdb
+	echo set args "$@"  > $tmpf
+	echo set env GERBV_SCHEMEINIT @SRCDIR@ >> $tmpf
+	exec ../libtool --mode=execute gdb -x $tmpf ${GERBV}
+	rm -f $tmpf
+	rm -fr $tmpd
+else
+	GERBV_SCHEMEINIT="@SRCDIR@"
+	export GERBV_SCHEMEINIT
+	exec ${GERBV} "$@"
+fi
+

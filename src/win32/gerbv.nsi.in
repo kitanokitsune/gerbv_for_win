@@ -1,0 +1,192 @@
+;; $Id$
+;;
+;; Installer script file for gerbv for windows.  See http://nsis.sourceforge.net
+;; for details on NSIS.
+;;
+
+; Started with:
+;
+;NSIS Modern User Interface
+;Start Menu Folder Selection Example Script
+;Written by Joost Verburg
+;
+; and modified for wcalc by Dan McMahill
+;
+; Later copied for use by pcb by Dan McMahill
+; Finally copied for use by gerbv by Dan McMahill
+
+;--------------------------------
+;Include Modern UI
+
+  !include "MUI.nsh"
+
+;--------------------------------
+;Include macros for associating file 
+;extensions
+!include "registerExtension.nsh"
+
+;--------------------------------
+;General
+
+  ;Name and file
+  Name "gerbv-@prog_version@"
+  OutFile "gerbvinst-@prog_version@.exe"
+
+  ;See http://nsis.sourceforge.net/Shortcuts_removal_fails_on_Windows_Vista
+  ;for more details.
+  RequestExecutionLevel admin
+
+  ;Default installation folder
+  InstallDir "$PROGRAMFILES\gerbv-@prog_version@"
+  
+  ;Get installation folder from registry if available
+  InstallDirRegKey HKCU "Software\gerbv-@prog_version@" ""
+
+;--------------------------------
+;Variables
+
+  Var MUI_TEMP
+  Var STARTMENU_FOLDER
+
+;--------------------------------
+;Interface Settings
+
+  !define MUI_ABORTWARNING
+
+;--------------------------------
+;Pages
+
+  !insertmacro MUI_PAGE_LICENSE "@prog_srcdir@\COPYING"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-gpl2"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-gpl3"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-lgpl2"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-lgpl2-1"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-expat"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-fontconfig"
+;  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-jpeg"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-png"
+;  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-tiff"
+;  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-xpm"
+  !insertmacro MUI_PAGE_LICENSE "@gtk_win32_runtime@\LICENSE-zlib"
+;  !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MUI_PAGE_DIRECTORY
+  
+  ;Start Menu Folder Page Configuration
+  !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\gerbv-@prog_version@" 
+  !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
+  
+  !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
+  
+  !insertmacro MUI_PAGE_INSTFILES
+  
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+
+;--------------------------------
+;Languages
+ 
+  !insertmacro MUI_LANGUAGE "English"
+
+;--------------------------------
+;Installer Sections
+
+Section "Dummy Section" SecDummy
+  SetShellVarContext all
+
+  SetOutPath "$INSTDIR"
+  
+  ;ADD YOUR OWN FILES HERE...
+  File /a /r "@gtk_win32_runtime@\*.*"
+  File /a /r "@prog_prefix@\*.*"
+
+  ;Associate file types and icons
+  ${registerExtension} "$INSTDIR\bin\gerbv.exe" "" ".gbr" "RS274-X File"
+  ${registerExtension} "$INSTDIR\bin\gerbv.exe" "" ".gbx" "RS274-X File"
+  ${registerExtension} "$INSTDIR\bin\gerbv.exe" "" ".cnc" "Excellon Drill File"
+  ${registerExtension} "$INSTDIR\bin\gerbv.exe" "" ".ncd" "Excellon Drill File"
+  ${registerExtension} "$INSTDIR\bin\gerbv.exe" "" ".xy" "PCB Centroid File"
+  ${registerExtension} "$INSTDIR\bin\gerbv.exe" "-p" ".gvp" "Gerbv Project File"
+ 
+  ;Store installation folder
+  WriteRegStr HKCU "Software\gerbv-@prog_version@" "" $INSTDIR
+  
+  ;Create uninstaller
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
+  
+  !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+    
+    ;Create shortcuts
+    CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\BUGS.lnk" "$INSTDIR\share\gerbv\BUGS.txt"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\COPYING.lnk" "$INSTDIR\share\gerbv\COPYING.txt"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Readme.lnk" "$INSTDIR\share\gerbv\Readme.txt"
+    SetShellVarContext current
+    SetOutPath "$DOCUMENTS"
+    SetShellVarContext all
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\gerbv.lnk" "$INSTDIR\bin\gerbv.exe" "" "$INSTDIR\bin\gerbv.exe" 0 "" "" "gerbv RS274-X file viewer"
+    SetOutPath "$INSTDIR"
+
+;; CreateShortCut  link.lnk target.file [parameters [icon.file [icon_index_number [start_options [keyboard_shortcut [description]]]]]]
+
+  !insertmacro MUI_STARTMENU_WRITE_END
+
+SectionEnd
+
+;--------------------------------
+;Descriptions
+
+  ;Language strings
+;  LangString DESC_SecDummy ${LANG_ENGLISH} "A test section."
+
+  ;Assign language strings to sections
+;  !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+;    !insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
+;  !insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+;--------------------------------
+;Uninstaller Section
+
+Section "Uninstall"
+  SetShellVarContext all
+
+  ;ADD YOUR OWN FILES HERE...
+
+  ${unregisterExtension} ".gbr" "RS274-X File"
+  ${unregisterExtension} ".gbx" "RS274-X File"
+  ${unregisterExtension} ".cnc" "Excellon Drill File"
+  ${unregisterExtension} ".ncd" "Excellon Drill File"
+  ${unregisterExtension} ".xy"  "PCB Centroid File"
+  ${unregisterExtension} ".gvp" "Gerbv Project File"
+
+  Delete "$INSTDIR\Uninstall.exe"
+  Delete "$INSTDIR\*.*"
+
+  RMDir /r "$INSTDIR\*.*"
+  RMDir "$INSTDIR"
+  
+  !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
+    
+  Delete "$SMPROGRAMS\$MUI_TEMP\BUGS.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\COPYING.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\gerbv.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Readme.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
+  
+  ;Delete empty start menu parent diretories
+  StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
+ 
+  startMenuDeleteLoop:
+	ClearErrors
+    RMDir $MUI_TEMP
+    GetFullPathName $MUI_TEMP "$MUI_TEMP\.."
+    
+    IfErrors startMenuDeleteLoopDone
+  
+    StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
+  startMenuDeleteLoopDone:
+
+  DeleteRegKey /ifempty HKCU "Software\gerbv-@prog_version@"
+
+SectionEnd

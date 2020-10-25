@@ -1,0 +1,46 @@
+Since almost all documents I have found on the Internet has copyright
+forbidding the distribution of them, I have instead made a list of
+information about RS-274[XD]. I found them by, basically, using google.
+
+$Id$
+
+* BARCO SYSTEMS
+_The_ description which is all over Internet. This is the source.
+	   http://www.maniabarco.com/trandown/rs274xrevd_e.pdf
+
+
+* D-codes, Apertures & Gerber Plot Files
+Desribes how a photo plotter works and describes RS-274D.
+
+	 http://www.artwork.com/gerber/appl2.htm
+
+
+* What's all this about RS274X Anyway?
+
+"If you're a PCB designer you're probably hearing more and more about 
+extended Gerber - RS274X. The latest versions of many PCB layout programs 
+either offer RS274X as an option or only output RS274X-- such as Cadence's 
+Allegro."
+
+Discusses the extension to RS27X from RS274D. Continuation from above.
+	  http://www.artwork.com/gerber/274x/rs274x.htm
+
+
+* Webutils for gerber files
+"These web utilities are Java servlets written by C. Scott Ananian; 
+the source code is licensed under the GNU GPL."
+Send in your gerber and you can view it on the web as SVG. There is
+also an Gerber to HPGL converter.
+    http://sinfor.lcs.mit.edu:8180/pcbmill/index.html
+
+
+* Eagle Gerber Tutorial
+http://www.precma.com/informatica/tutorial.htm
+
+
+* Excellon Drill Format
+http://www.excellon.com/manuals/program.htm
+
+* Example on other free (as in free speech) implementations
+I try to list as many program as possible living up to the standards on
+Gerbv's homepage http://gerbv.geda-project.org/.

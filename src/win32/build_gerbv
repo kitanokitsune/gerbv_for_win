@@ -1,0 +1,482 @@
+#!/bin/sh
+#
+#
+
+# error out on failed commands whose return code wasn't explicitly
+# checked
+set -e
+
+usage() {
+cat << EOF
+
+$0 [options]
+
+Builds a non-cygwin version of gerbv or pcb and create a standalone
+windows installer.
+
+Supported options:
+
+  --build-only    - Only run the 'make' part of the process.  This is 
+                    shorthand for all of the --skip-* options except
+                    for --skip-build.
+
+  --debug         - Omits the compiler flag which prevents
+                    a command window from being opened.  This
+                    is useful when trying to use debug printf's.
+                    If listed twice then --enable-debug is passed
+                    down to the configure script which enables 
+                    a good bit of debug output.
+
+  -h|--help       - Show this message and exit.
+
+  --force-autogen - Force running ./autogen.sh.  Normally this is
+                    only done if the configure script is not present.
+
+  --nsis-only     - Only run NSIS to create the installer.  This is
+                    shorthand for all of the following --skip-* options.
+
+  --skip-build    - Skip the "make" step of the process.
+
+  --skip-clean    - Skip the "make clean" step of the process.
+
+  --skip-config   - Skip the "./configure" step of the process.
+
+  --skip-install  - Skip the "make install" step of the process.
+
+  --skip-nsis     - Skip the NSIS step of the process.
+
+For the $0 script to work, you must have the gtk_win32 files
+as well as gdlib installed on your system in very specific
+locations.  Edit $0 to change these.  While you are at it, feel
+free to provide a patch to improve the documentation about 
+those libraries.
+
+On older installs of cygwin, the available gcc will accept -mno-cygwin
+to build an executible that does not link to the cygwin dll.  On newer
+gcc's this option has been removed and you must use either a
+cross compiler that targets mingw or use the native MinGW compiler.
+If you use the native MinGW compiler approach, then 
+the MinGW compilers to be installed in
+c:\MinGW and also in your cygwin environment there needs to be
+a symbolic link:
+
+/mingw -> /cygdrive/c/MinGW
+
+EOF
+}
+
+debug=no
+do_autogen=no
+do_config=yes
+do_build=yes
+do_clean=yes
+do_install=yes
+do_nsis=yes
+config_args=""
+while test $# -ne 0 ; do
+	case $1 in
+		--build-only)
+			do_clean=no
+			do_config=no
+			do_install=no
+			do_nsis=no
+			shift
+			;;
+
+		--debug)
+			if test "X${debug}" = "Xyes" ; then
+				config_args="${config_args} --enable-debug"
+			fi
+			debug=yes
+			shift
+			;;
+
+		-h|--help)
+			usage
+			exit 0
+			;;
+
+		--force-autogen)
+			do_autogen=yes
+			shift
+			;;
+
+		--nsis-only)
+			do_build=no
+			do_clean=no
+			do_config=no
+			do_install=no
+			shift
+			;;
+
+		--skip-build)
+			do_build=no
+			shift
+			;;
+
+		--skip-clean)
+			do_clean=no
+			shift
+			;;
+
+		--skip-config)
+			do_config=no
+			shift
+			;;
+
+		--skip-install)
+			do_install=no
+			shift
+			;;
+
+		--skip-nsis)
+			do_nsis=no
+			shift
+			;;
+
+		-*)
+			echo "ERROR:  Unknown option $1"
+			usage
+			exit 1
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+do_fake_crossbuild=no
+if test -f /mingw/bin/mingw32-gcc.exe ; then
+	do_fake_crossbuild=yes
+fi
+
+echo "do_fake_crossbuild = ${do_fake_crossbuild}"
+
+enable_doc=
+prog_name=unknown
+if test ! -d win32 ; then
+	echo "$0:  ERROR.  This script must be run from the top level of the source tree"
+	exit 1
+fi
+
+if test -f src/gerbv.c ; then
+	prog_name=gerbv
+fi
+
+if test -f src/pcb-menu.res ; then
+	prog_name=pcb
+	config_args="${config_args} --disable-dbus --disable-m4lib-png "
+	if test -f .gitignore -o -f CVS/Root ; then
+		echo "Building from git or CVS so the documentation"
+		echo "build will be disabled (since we are cross building"
+		config_args="${config_args} --disable-doc" 
+		enable_doc=";"
+	fi
+fi
+
+if test -f libwcalc/microstrip.c ; then
+	prog_name=wcalc
+	config_args="${config_args} --disable-htdocs --disable-cgi --disable-stdio"
+fi
+
+if test ${prog_name} = unknown ; then
+	cat << EOF
+$0:  ERROR.  Unable to figure out what you are building.
+This may happen if you are trying to execute $0 from a directory
+other than the top of the source tree.
+EOF
+	exit 1
+fi
+
+echo "Building program:  ${prog_name}"
+
+# Run this under cygwin to build gerbv or pcb and create a windows installer for
+# it.  Thanks to Bob Paddock for pointing me to NSIS and answering some 
+# beginner windows questions.
+
+# where gtk_win32 is installed
+gtk_win32=c:\\cygwin\\home\\${USER}\\gtk_win32
+gd_win32=c:\\cygwin\\home\\${USER}\\gd_win32
+gd_win32_f=c:/cygwin/home/${USER}/gd_win32
+
+# where only the runtime components are installed
+gtk_win32_runtime=c:\\\\cygwin\\\\home\\\\${USER}\\\\gtk_win32_runtime
+gd_win32_runtime=c:\\\\cygwin\\\\home\\\\${USER}\\\\gd_win32_runtime
+
+# program version
+
+prog_version=`awk '/AC_INIT/ {gsub(/.*,[ \t]*\[/, ""); gsub(/\]\).*/, ""); print}' configure.ac`
+echo "prog_version=${prog_version}"
+
+# location of the NSIS makensis executible (see http://nsis.sourceforge.net)
+makensis="/cygdrive/c/Program Files/NSIS/makensis.exe"
+
+
+# ########################################################################
+#
+# The rest should be ok without editing
+#
+# ########################################################################
+
+
+######################################################################
+#
+# AUTOGEN
+#
+######################################################################
+
+if test ! -f configure -o $do_autogen = yes ; then
+	echo "Bootstrapping autotools"
+	ACLOCAL_FLAGS="-I ${gtk_win32}\\share\\aclocal" ./autogen.sh
+fi
+
+# source directory
+srcdir=`pwd.exe`/win32
+top_srcdir=${srcdir}/..
+
+src_dir=c:\\\\cygwin`echo ${srcdir} | sed 's;/;\\\\\\\\;g'`
+top_src_dir=c:\\\\cygwin`echo ${top_srcdir} | sed 's;/;\\\\\\\\;g'`
+
+
+# where to install the program
+prog_inst=`pwd`/${prog_name}_inst
+
+# DOS version
+prog_inst_dir=c:\\\\cygwin`echo ${prog_inst} | sed 's;/;\\\\\\\\;g'`
+
+PKG_CONFIG_PATH=${gtk_win32}\\lib\\pkgconfig
+export PKG_CONFIG_PATH
+
+PATH=${gtk_win32}\\bin:${gd_win32}:${PATH}
+export PATH
+
+echo "Showing packages known to pkg-config:"
+pkg-config --list-all
+
+
+# do not try to use libpng-config, it seems broken on win32
+if test $prog_name = pcb ; then
+	LIBPNG_CFLAGS="-I${gtk_win32}\\include"
+	LIBPNG_CPPFLAGS="-I${gtk_win32}\\include"
+	LIBPNG_LDFLAGS="-L${gtk_win32}\\lib"
+	LIBPNG_LIBS="-lpng14"
+	LIBGD_CFLAGS="-I${gd_win32}\\include -I${gd_win32_f}/include"
+	LIBGD_CPPFLAGS="-I${gd_win32}\\include"
+	LIBGD_LDFLAGS="-L${gd_win32}\\lib -L${gd_win32_f}/lib"
+	LIBGD_LIBS="-lbgd"
+	# this ugly hack is here because the AC_CHECK_FUNC autoconf
+	# test doesn't include gd.h.  Inside of gd.h, gdImageGif and
+	# friends are declared with
+	#  __declspec(dllimport) void _stdcall
+	# which causes a change in how the function is named in the DLL
+	# which in turn causes the autoconf test to fail.  ugh!  FIXME! 
+	export ac_cv_func_gdImageGif=yes
+	export ac_cv_func_gdImageJpeg=yes
+	export ac_cv_func_gdImagePng=yes
+else
+	LIBPNG_CFLAGS=""
+	LIBPNG_LDFLAGS=""
+	LIBPNG_LIBS=""
+fi
+LIBPNG_CONFIG=/usr/bin/true
+export LIBPNG_CONFIG
+
+# add the gcc options to produce a native windows binary that
+# does not need cygwin to run
+if test "x${debug}" = "xno" ; then
+	EXTRA_FLAGS="-mwindows"
+fi
+
+CYGWIN_CFLAGS="-mms-bitfields -mno-cygwin ${EXTRA_FLAGS}"
+export CYGWIN_CFLAGS
+
+CYGWIN_CPPFLAGS="-mms-bitfields -mno-cygwin ${EXTRA_FLAGS}"
+export CYGWIN_CPPFLAGS
+
+
+# older releases of cygwin had a gcc that accepted -mno-cygwin.
+# in more recent releases this flag (which builds and links without
+# the cygwin dll) has been removed.  We either need a normal
+# cross compiler or we can fake it by using the native mingw
+# compiler.  
+# see http://www.gnu.org/software/libtool/manual/html_node/Cygwin-to-MinGW-Cross.html
+# in particular, the lt_cv_to_tool_file_cmd bit is needed because
+# libtool will call the mingw ranlib which will not understand
+# any cygwin absolute paths.  
+if test ${do_fake_crossbuild} = yes ; then
+	config_args="${config_args} --build=i686-pc-cygwin --host=mingw32"
+	NM=/cygdrive/c/MinGW/bin/nm.exe
+	export NM
+
+	# the ranlib bit here is because putting the mingw tools first
+	# in PATH causes the mingw ranlib to be called.  The problem
+	# with that is tht libtool is passing an absolute cygwin
+	# path at install time to ranlib which can't deal.  The
+	# func_convert... stuff is supposed to help but it didn't.
+	# The libtool folks have a patch for this so at some point
+	# this can go away.
+	RANLIB=/usr/bin/ranlib
+	export RANLIB
+	PATH=/cygdrive/c/MinGW/bin:${PATH}
+	export lt_cv_to_tool_file_cmd=func_convert_file_cygwin_to_w32
+fi
+
+######################################################################
+#
+# CONFIGURE
+#
+######################################################################
+
+# setting WIN32=yes will make sure that the desktop icon
+# gets compiled in
+if test "$do_config" = "yes" ; then
+rm -fr src/.deps
+echo "Configuring for cygwin"
+( ( ( env WIN32=yes \
+	./configure \
+	--prefix=${prog_inst} \
+	--disable-dependency-tracking \
+	--disable-maintainer-mode \
+	--disable-nls \
+	--disable-update-desktop-database \
+	--disable-update-mime-database \
+	${config_args} \
+	CFLAGS="${LIBPNG_CFLAGS} ${LIBGD_CFLAGS}" \
+	CPPFLAGS="${LIBPNG_CPPFLAGS} ${LIBGD_CPPFLAGS}" \
+	LDFLAGS="${LIBPNG_LDFLAGS} ${LIBGD_LDFLAGS}" \
+	LIBS="${LIBPNG_LIBS} ${LIBGD_LIBS}" \
+	WIN32=yes \
+	2>&1 ; echo $? >&4 ) | tee c.log 1>&3) 4>&1 | (read a ; exit $a)) 3>&1
+
+if test $? -ne 0 ; then
+	echo "**** ERROR **** Configure failed. See log in c.log"
+	exit 1
+fi
+
+# If the win32 pkg-config is used, then you end up with spurious CR's
+# in the generated Makefile's and we need to get rid of them.
+
+remove_rc() {
+	f="$1"
+	mv $f $f.bak
+	cat $f.bak | tr '\r' ' ' > $f
+	rm $f.bak
+}
+echo "Removing spurious carriage returns in the Makefiles..."
+for f in `find . -name Makefile -print` ; do
+	remove_rc "$f"
+done
+
+if test -f libtool ; then
+	echo "Removing spurious carriage returns in libtool..."
+	remove_rc libtool
+fi
+
+fi # do_config
+
+######################################################################
+#
+# CLEAN
+#
+######################################################################
+
+if test "$do_clean" = "yes" ; then
+echo "Cleaning"
+( ( ( make clean 2>&1 ; echo $? >&4) | tee clean.log 1>&3) 4>&1 | (read a ; exit $a) ) 3>&1
+if test $? -ne 0 ; then
+	echo "**** ERROR **** Clean failed. See log in clean.log"
+	exit 1
+fi
+fi
+
+######################################################################
+#
+# BUILD
+#
+######################################################################
+
+if test "$do_build" = "yes" ; then
+echo "Building for cygwin"
+( ( ( make 2>&1 ; echo $? >&4) | tee m.log 1>&3) 4>&1 | (read a ; exit $a) ) 3>&1
+if test $? -ne 0 ; then
+	echo "**** ERROR **** Build failed. See log in m.log"
+	exit 1
+fi
+fi
+
+######################################################################
+#
+# INSTALL
+#
+######################################################################
+
+if test "$do_install" = "yes" ; then
+echo "Installing for cygwin"
+# first clean out the installation directory to make sure
+# we don't have old junk lying around.
+if test -d ${prog_inst} ; then
+	rm -fr ${prog_inst}
+fi
+( ( ( make install 2>&1 ; echo $? >&4) | tee -a m.log 1>&3) 4>&1 | (read a ; exit $a) ) 3>&1
+if test $? -ne 0 ; then
+	echo "**** ERROR **** Build failed. See log in m.log"
+	exit 1
+fi
+fi
+
+######################################################################
+#
+# NSIS INSTALLER CREATION
+#
+######################################################################
+
+if test "$do_nsis" = "yes" ; then
+echo "Creating NSIS script"
+echo "srcdir = ${srcdir}"
+echo "src_dir = ${src_dir}"
+echo "top_srcdir = ${top_srcdir}"
+echo "top_src_dir = ${top_src_dir}"
+
+sed \
+	-e "s|@enable_doc@|${enable_doc}|g" \
+	-e "s;@prog_version@;${prog_version};g" \
+	-e "s;@prog_prefix@;${prog_inst_dir};g" \
+	-e "s;@prog_srcdir@;${top_src_dir};g" \
+	-e "s;@gd_win32_runtime@;${gd_win32_runtime};g" \
+	-e "s;@gtk_win32_runtime@;${gtk_win32_runtime};g" \
+	${srcdir}/${prog_name}.nsi.in > ${srcdir}/${prog_name}.nsi
+
+echo "Creating windows installer"
+"${makensis}" ${src_dir}/${prog_name}.nsi
+
+
+echo "Windows installer left in ${srcdir}:"
+ls -l ${srcdir}/*.exe
+
+
+bat=run_install.bat
+
+cat << EOF
+
+Creating DOS batch file wrapper for the installer.
+If you have just built this under cygwin on Vista, 
+you will need to either run the installer from
+the Vista start menu, Windows explorer or directly from
+the cygwin shell with
+
+./${bat}
+
+EOF
+
+cat > ${bat} << EOF
+
+.\win32\\${prog_name}inst-${prog_version}.exe
+
+EOF
+chmod 755 ${bat}
+else
+	echo "Skipping NSIS step per user request"
+fi
+
+

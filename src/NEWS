@@ -1,0 +1,223 @@
+========================================================================
+Release Notes for gerbv-2.7.0
+========================================================================
+-gerbv:     User interface settings are saved with GSettings (units,
+            rendering type, background color, windows size and position...).
+-gerbv:     Merge file and project open menu items to File/Open.
+-gerbv:     File drag&drop support (only to Gerbv).
+-gerbv:     Popup dialog on reload.
+-gerbv:     Add Apply to all visible layers functionality in Edit layer dialog.
+-gerbv:     Two layers can be aligned by center of two selected apertures or
+            lines.
+-gerbv:     Add View/Show cross on drill holes.
+-gerbv:     Show distance between apertures if two apertures are selected and
+            measure tool is clicked.
+-gerbv:     Deselect elements with Ctrl+LMB click.
+-gerbv:     Add View/Show all selection to show selected items on invisible
+            layers.
+-gerbv:     Report layer bounding size in analyze dialog.
+-gerbv:     Report more properties for elements.
+-gerbv:     Default file name in export and save as dialogs.
+-gerbv:     Show data in tables in Gerber and drill codes report.
+-gerbv:     Support alpha, translate, rotation, scale, mirror in Gerbv project
+            file.
+-gerbv:     Ask confirmation on file overwriting.
+-gerbv:     Add DPI setting for PNG exporting dialog.
+-gerbv:     Updated localization.
+-gerbv:     Fix missed console output on Windows.
+-gerbv:     Fix various bugs.
+-libgerbv:  Export to DXF (initial support).
+-libgerbv:  Export to gEDA PCB (initial support).
+-libgerbv:  Export drill as ISEL NCP.
+-libgerbv:  Support drilled slot (but not routed yet).
+-libgerbv:  Report file line number in RS274X and Excellon import error.
+-libgerbv:  Prevent rasterization at vector export.
+-libgerbv:  Fix various bugs.
+
+========================================================================
+Release Notes for gerbv-2.6.2
+========================================================================
+This is a minor patch release on top of gerbv-2.6.1.  The change
+is to property create the tarball with the build framework so that
+the automake/autoconf/etc generated files are included.
+
+========================================================================
+Release Notes for gerbv-2.6.1
+========================================================================
+-gerbv:     Report aperture parameters.
+-gerbv:     Toggle all layers on/off.
+-gerbv:     Using po4a to help man-page localization.
+-gerbv:     Fix various bugs.
+
+========================================================================
+Release Notes for gerbv-2.6.0
+========================================================================
+The following is a summary of the changes which went into gerbv-2.6.0.
+For a complete list of changes, refer to ChangeLog.  This release
+is primarily a bug fix release.
+
+-libgerbv:  Removed all gcc compiler warnings.
+-gerbv:     Removed all gcc compiler warnings.
+-libgerbv:  Updated the export code to be more portable in the face of
+            different locale settings.
+-gerbv:     Fix compilation on Quartz.
+-libgerbv:  Fix a bug where very thin flashed rectangles in logos/images
+            from Eagle CAD were not always rendered.
+-examples:  Added example on using precedence sensitive calculations of
+            aperture macros.
+-libgerbv:  Improve vector output accuracy.
+-gerbv:     Improve vector output accuracy.
+-libgerbv:  Fix bug related to minimum line widths in scaled layers
+-libgerbv:  Increase resolution in exported RS-274X files.
+-gerbv:     Fix bug around exporting selected layers.
+-gerbv:     Gray out menu items when no layers are open.
+-gerbv:     Set secreen size to a default when the board size is not valid.
+-libgerbv:  Implemented operator precedence in aperture macro
+	    parsing as per updated std
+-libgerbv:  Fix scaling bug when multiple scale factors are present.
+-gerbv:     Fix bug where only the bottom layer would print out.
+-gerbv:     Add file merging to the GUI which allows the user to do basic
+            panelization via the GUI.
+-gerbv:     Added "current layer" menuitem to the main menu.
+-libgerbv:  Fix macro rendering on clear layers (bug 3154966)
+
+========================================================================
+Release Notes for gerbv-2.5.0
+========================================================================
+The following is a summary of the changes which went into gerbv-2.5.0.
+For a complete list of changes, refer to ChangeLog.  This release
+is primarily a bug fix release.
+
+- libgerbv:  fix leak and possible segfault in drill parser
+- libgerbv:  fix segfault in pick and place parser
+- gerbv:     add persistent keyboard accelerators and extra menu options
+- gerbv:     increase max zoom 4x to allow more accurate measurements
+- libgerbv:  fix bug which caused the drill parser to crash on an empty line
+- gerbv:     change F8 shortcut to F7 per GNOME HIG
+- gerbv:     add psuedo fullscreen mode
+- gerbv:     add ability to toggle sidebar visibility
+- gerbv:     speed up cairo rendering.
+- libgerbv:  improved detection of drill files (comment lines are now
+             ignored during file type detection)
+- libgerbv:  fix handling of trailing zero suppression with very large
+             precisions.
+- examples:  fix some of the example code showing how to use libgerbv.
+- gerbv:     fix gdk rendering of macro 22 elements with negative coordinates
+- gerbv:     fix tooltip for modify layer button
+- libgerbv:  fix handling of whitespace in the middle of an RS-274X command
+- libgerbv:  fix bug in exporting outline macros
+- gerbv:     unselect all items if a layer is hidden
+- libgerbv:  fix drill parsing when INCH has nothing after it
+
+
+========================================================================
+Release Notes for gerbv-2.4.0
+========================================================================
+The following is a summary of the changes which went into gerbv-2.4.0.
+For a complete list of changes, refer to ChangeLog.  This release
+is primarily a bug fix release.  A number of corner cases are handled
+more smoothly now.
+
+- libgerbv:  fix bug parsing cirular moves with trailing zero suppression.
+- libgerbv:  catch null strtok results in the aperture parser.  Causes
+             a more graceful failure when parsing bad input files.
+- gerbv:     fix a bug in the rendering of text in exported PDF files
+- libgerbv:  fix bugs in the file format recognition code
+- libgerbv:  allow the RS-274X parser to handle multiple blocks within
+             a single line per the RS-274X spec.
+- gerbv:     Fix sidebar bug displaying small scale and translations in X
+- gerbv:     Show the total aperture uses in the analysis tool
+- gerbv:     Fix regression in FAST mode rendering of flashed apertures
+- libgerbv:  If given an RS-274D file, create dummy apertures
+- gerbv:     Fix FAST mode translation error in Y
+- libgerbv:  Add #ifdef's to gerbv.h to allow use in a C++ program
+- gerbv:     Fix segfaults if trying to change orientation of an empty layer
+- man page:  Remove spurious line
+- gerbv:     Update some information in the "About..." dialog
+
+========================================================================
+Release Notes for gerbv-2.3.0
+========================================================================
+The following is a summary of the changes which went into gerbv-2.3.0.
+For a complete list of changes, refer to ChangeLog.
+
+- gerbv:     fixed a minor arc rendering bug in fast mode
+- gerbv:     Make the svg/pdf/ps export use a 1:1 scale instead of
+             scaling to fit the page.
+- configure: Always require cairo now since we make use of some of
+             the transformation functions even when using gdk rendering.
+- gerbv:     Fix a bug in the vertical scrollbar calculations.
+- libgerbv:  Fix a bug where apertures < 10 were potentially ignored in
+             some drill files
+- gerbv:     Fix clipping bug when viewing files with image offsets
+- gerbv:     Fix a bug whereclicking on the message tab caused the keyboard
+             accelerators stop working
+- gerbv:     Use a reasonable return code when doing command line processing.
+- libgerbv:  Improve the macro parser.
+- libgerbv:  Allow 0 degree rotation
+- libgerbv:  Fix some drill parser bugs
+- libgerbv:  Support the Excellon "R" (repeat) command
+- testsuite: Add some tests for drill files
+- libgerbv:  Fix a bug in the Excellon export which sometimes dropped the first
+             element.
+- libgerbv:  Fix some additional Excellon export bugs.
+- gerbv:     Add the ability to rotate/translate layers
+- libgerbv:  Fix the pkgconfig file to include some needed dependencies.
+
+========================================================================
+Release Notes for gerbv-2.2.0
+========================================================================
+The following is a summary of the changes which went into gerbv-2.2.0.
+For a complete list of changes, refer to ChangeLog.
+
+- libgerbv:  fixed a bug in the min/max calculation.
+- libgerbv:  improved the ability to parse drill files with
+             user specified formats.
+- libgerbv:  Compile with -no-undefined to make it easier to build
+             windows DLL's.
+- configure: Improve detection of tools when cross-compiling.
+- libgerbv:  Improved example programs.
+- gerbv:     Changed desktop categories to be more consistent with
+             the rest of gEDA.
+- common:    Fixed compilation with SunPRO compilers
+- libgerbv:  Fixed calculation of pick and place bounding box
+- gerbv:     Added a rendering benchmark
+- gerbv:     Various rendering speed improvements
+- common:    Made an install be relocatable.  This is always needed
+             for proper win32 operation and helps in some cases
+             on other operating systems.  As part of this, improve
+             how init.scm is located at startup.
+- gerbv:     Improved the project file load/save dialog.
+
+========================================================================
+Old Releases
+========================================================================
+2008-09-07 : 2.1.0 release.  Added features for object selection & deletion.
+2008-02-07 : 2.0.1 release.  This is largely a bugfix release.
+2008-01-13 : 2.0.0 general release.  Introduced new look for gerbv.
+2008-01-09 : 2.0.0-beta release.
+2007-12-01 : 1.0.3 release.
+2006-07-28 : 1.0.2 release.
+2005-01-22 : 1.0.1 release.
+2004-12-28 : 1.0.0 release.
+2004-10-19 : Another beta of a windows version is released.
+2004-10-07 : A beta of a windows version.
+2004-05-27 : 0.16 release.
+2003-10-19 : 0.15 release.
+2003-09-16 : 0.14 release.
+2003-07-30 : Michael Ihde updated the ebuild script for Gentoo Linux.
+2003-07-17 : Michael Ihde contributed an ebuild script for Gentoo Linux.
+2003-03-19 : 0.13 release.
+2003-02-10 : 0.12 release.
+2002-11-20 : 0.11 release.
+2002-10-13 : 0.0.10 release.
+2002-07-06 : 0.0.9 release.
+2002-05-06 : 0.0.8 release.
+2002-02-10 : 0.0.7 release.
+2001-12-15 : 0.0.6 release.
+2001-11-14 : Fifth relase (0.0.5).
+2001-10-27 : Fourth release (0.0.4).
+2001-09-09 : Third release (0.0.3).
+2001-08-30 : Second release (0.0.2).
+2001-08-25 : First release (0.0.1) of source.
+

@@ -3,7 +3,7 @@
 # gerbv 2.7.0 for Windows
 gEDA gerbv を Windows で動作するように修正したソースコードと実行バイナリです。  
   
-<img src="./sample.png" width="600px" alt="gerbv" title="gerbv">
+<img src="./sample_jp.png" width="600px" alt="gerbv" title="gerbv">
 
 ## Overview
 [gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) のWindows実行用ファイル一式です。[32bit版](./32bit) と [64bit版](./64bit) があります。  

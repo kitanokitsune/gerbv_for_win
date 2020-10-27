@@ -7,14 +7,14 @@ Windows port of gEDA gerber viewer
 
 ## Overview
 A set of [gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) files for execution on MS-Windows. [32bit version ](./32bit) and [64bit version](./64bit) are available.
-They are build with msys64 (mingw-w64).  
+They are built with msys64 (mingw-w64).  
 
 
 ## Install
 Copy the contents of [32bit](./32bit) or [64bit](./64bit) into an arbitrary directory.
 Please keep the positional relation between **bin**, **lib** and **share** as below.  
 ```TEXT
-<install_dir> --+-- bin\ （この中に gerbv.exe がある）
+<install_dir> --+-- bin\ （gerbv.exe is here）
                 |
                 +-- etc\
                 |

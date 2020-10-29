@@ -25,7 +25,7 @@ Please keep the positional relation between **bin**, **lib** and **share** as be
 
 
 ## Localization
-Create [your language file (.po)](./src/po), then convert it to **gerbv.mo** and place it in  **`share\locale\<your_lang>\LC_MESSAGES\`**.  Please see **gettext** document for details.
+Create [your language file (.po)](./src/po), then convert it to **gerbv.mo** and place it in  **`share\locale\<your_lang>\LC_MESSAGES\`**.  Please see **GNU gettext** document for details.
 
 
 ## Source Code

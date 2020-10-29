@@ -11,7 +11,7 @@ They are built with msys64 (mingw-w64).
 
 
 ## Install
-Copy the contents of [32bit](./32bit) or [64bit](./64bit) into an arbitrary directory.
+Copy the contents of [32bit](./32bit) or [64bit](./64bit) into an arbitrary directory.  
 Please keep the positional relation between **bin**, **lib** and **share** as below.  
 ```TEXT
 <install_dir> --+-- bin\ （gerbv.exe is here）
@@ -25,14 +25,14 @@ Please keep the positional relation between **bin**, **lib** and **share** as be
 
 
 ## Localization
-The language file **gerbv.mo** should be placed in  **share\locale\<your lang>\LC_MESSAGES\ **.  
+Create [your language file (.po)](./src/po), then convert it to **gerbv.mo** and place it in  **share\locale\<your lang>\LC_MESSAGES**\.  
 
 
 ## Source Code
-This package was based on the source code which was obtained from **git.geda-project.org**.
+This package is based on the source code which was obtained from **git.geda-project.org**.  
 [http://git.geda-project.org/gerbv/tree/?id=b5f1eacd798f327ab319af939f89031db4b7c10a](http://git.geda-project.org/gerbv/tree/?id=b5f1eacd798f327ab319af939f89031db4b7c10a)  
 
-I patched the following fix to the above source code. The result source is in [src](./src) directory.
+I fixed the above source code by the following patch. The result source is in [src](./src) directory.  
 **Patch contents**
 + [#79 Allow non-ASCII install path on MS-Windows](https://sourceforge.net/p/gerbv/patches/79/ )
 + [#78 Open non-ASCII filename](https://sourceforge.net/p/gerbv/patches/78/ )

@@ -2449,7 +2449,11 @@ gerbv_user_transformation_t startTransform = trans;
 
 		/* Set focus-in-event callback */
 		focus_nums[i] = i;
+# ifdef WIN32
+		g_signal_connect_swapped ((gpointer)(*focus_widgets[i]), "focus",
+# else
 		g_signal_connect_swapped ((gpointer)(*focus_widgets[i]), "focus-in-event",
+#endif
 			G_CALLBACK (focus_in_event_callback), (gpointer)(focus_nums + i));
 	}
 

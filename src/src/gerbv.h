@@ -482,6 +482,9 @@ typedef struct {
     int M0;
     int M1;
     int M2;
+    int M15;
+    int M16;
+    int M17;
     int M_unknown;
 
     int X;
@@ -527,6 +530,9 @@ typedef struct {
 
     int M00;
     int M01;
+    int M15;
+    int M16;
+    int M17;
     int M18;
     int M25;
     int M30;

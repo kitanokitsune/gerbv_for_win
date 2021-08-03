@@ -136,6 +136,9 @@ gerbv_drill_stats_add_layer(gerbv_drill_stats_t *accum_stats,
 
     accum_stats->M00 += input_stats->M00;
     accum_stats->M01 += input_stats->M01;
+    accum_stats->M15 += input_stats->M15;
+    accum_stats->M16 += input_stats->M16;
+    accum_stats->M17 += input_stats->M17;
     accum_stats->M18 += input_stats->M18;
     accum_stats->M25 += input_stats->M25;
     accum_stats->M30 += input_stats->M30;

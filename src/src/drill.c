@@ -105,6 +105,9 @@ typedef struct drill_state {
      * place in the file
      */
     int decimals;
+    /* if set to 1, the next X/Y coordinate indicates a routing bit move
+       in order to drill a slot from the current location */
+    int drill_slot;
 
 } drill_state_t;
 
@@ -278,6 +281,53 @@ drill_add_drill_hole (gerbv_image_t *image, drill_state_t *state,
     drill_update_image_info_min_max_from_bbox(image->info, bbox);
 
     return curr_net;
+}
+
+/*
+ * Extends the existing hole into a slot
+ */
+static gerbv_net_t *
+drill_add_drill_slot (gerbv_image_t *image, drill_state_t *state, gerbv_drill_stats_t *stats, gerbv_net_t *curr_net)
+{
+	curr_net->start_x = curr_net->stop_x;
+	curr_net->start_y = curr_net->stop_y;
+
+	curr_net->stop_x = (double)state->curr_x;
+	curr_net->stop_y = (double)state->curr_y;
+
+	/* KLUDGE. All images must be returned in INCH format. */
+	if (state->unit == GERBV_UNIT_MM) {
+		curr_net->stop_x /= 25.4;
+		curr_net->stop_y /= 25.4;
+		curr_net->state->unit = GERBV_UNIT_INCH;
+	}
+
+	curr_net->stop_x -= state->origin_x;
+	curr_net->stop_y -= state->origin_y;
+	curr_net->aperture_state = GERBV_APERTURE_STATE_ON;
+
+	/* Return if the aperture is not set. */
+	if (image->aperture[state->current_tool] == NULL)
+		return curr_net;
+
+	/* Find min and max coordinates, adding the hole radius. */
+	double radius = image->aperture[state->current_tool]->parameter[0] / 2;
+	double x_min  = curr_net->stop_x + state->origin_x - radius;
+	double x_max  = curr_net->stop_x + state->origin_x + radius;
+	double y_min  = curr_net->stop_y + state->origin_y - radius;
+	double y_max  = curr_net->stop_y + state->origin_y + radius;
+
+	curr_net->boundingBox.left   = MIN(curr_net->boundingBox.left,   x_min);
+	curr_net->boundingBox.right  = MAX(curr_net->boundingBox.right,  x_max);
+	curr_net->boundingBox.bottom = MIN(curr_net->boundingBox.bottom, y_min);
+	curr_net->boundingBox.top    = MAX(curr_net->boundingBox.top,    y_max);
+
+	image->info->min_x = MIN(image->info->min_x, x_min);
+	image->info->max_x = MAX(image->info->max_x, x_max);
+	image->info->min_y = MIN(image->info->min_y, y_min);
+	image->info->max_y = MAX(image->info->max_y, y_max);
+
+	return curr_net;
 }
 
 /* -------------------------------------------------------------- */
@@ -458,7 +508,19 @@ parse_drillfile(gerb_file_t *fd, gerbv_HID_Attribute *attr_list, int n_attr, int
 	    switch (g_code = drill_parse_G_code(fd, image, file_line)) {
 
 	    case DRILL_G_DRILL :
-		/* Drill mode */
+ 	    case DRILL_G_ROUT :
+		state->drill_slot = 0;
+		break;
+
+	    case DRILL_G_LINEARMOVE :
+		state->drill_slot = -1;
+		if (curr_net->aperture_state == GERBV_APERTURE_STATE_ON) {
+		    /* Allows multiple routing moves in a row.  Not sure if any
+		       CAD package generates this but might as well allow it. */
+		    curr_net = drill_add_drill_hole(
+			image, state, stats, curr_net
+		    );
+		}
 		break;
 
 	    case DRILL_G_SLOT : {
@@ -669,6 +731,9 @@ parse_drillfile(gerb_file_t *fd, gerbv_HID_Attribute *attr_list, int n_attr, int
 		break;
 	    case DRILL_M_PATTERNEND :
 	    case DRILL_M_TOOLTIPCHECK :
+	    case DRILL_M_ZAXISROUTEPOSITION :
+	    case DRILL_M_RETRACTCLAMPING :
+	    case DRILL_M_RETRACTNOCLAMPING :
 		break;
 
 	    case DRILL_M_END :
@@ -798,9 +863,17 @@ parse_drillfile(gerb_file_t *fd, gerbv_HID_Attribute *attr_list, int n_attr, int
 	case 'Y':
 	    /* Hole coordinate found. Do some parsing */
 	    drill_parse_coordinate(fd, read, image, state, file_line);
-	    
-	    /* add the new drill hole */
-	    curr_net = drill_add_drill_hole (image, state, stats, curr_net);
+
+	    if (state->drill_slot) {
+		/* add the slot */
+		curr_net = drill_add_drill_slot(image, state, stats, curr_net);
+		/* X may be followed by Y but otherwise, it's a one-shot thing */
+		if (state->drill_slot > 0 && ++state->drill_slot > 2)
+		    state->drill_slot = 0;
+	    } else {
+		/* add the new drill hole */
+		curr_net = drill_add_drill_hole(image, state, stats, curr_net);
+	    }
 	    break;
 
 	case '%':
@@ -808,22 +881,29 @@ parse_drillfile(gerb_file_t *fd, gerbv_HID_Attribute *attr_list, int n_attr, int
 	    break;
 
 	case '\n' :
+	case '\r' : {
+	    int curr = read;
+
 	    file_line++;
 
-	    /* Get <CR> char, if any, from <LF><CR> pair */
+	    /* Get <CR> or <LF> char, if any, from <LF><CR> pair */
 	    read = gerb_fgetc(fd);
-	    if (read != '\r' && read != EOF)
+	    if (read != curr && read != EOF)
 		    gerb_ungetc(fd);
-	    break;
 
-	case '\r' :
-	    file_line++;
-
-	    /* Get <LF> char, if any, from <CR><LF> pair */
-	    read = gerb_fgetc(fd);
-	    if (read != '\n' && read != EOF)
-		    gerb_ungetc(fd);
+	    if (state->drill_slot < 0) {
+		if (curr_net->aperture_state == GERBV_APERTURE_STATE_ON) {
+		    /* Allows multiple routing moves in a row.  Not sure if any
+		       CAD package generates this but might as well allow it. */
+		    curr_net = drill_add_drill_hole(
+			image, state, stats, curr_net
+		    );
+		}
+	    } else {
+		state->drill_slot = 0;
+	    }
 	    break;
+	}
 
 	case ' ' :	/* White space */
 	case '\t' :
@@ -1324,6 +1404,15 @@ drill_parse_M_code(gerb_file_t *fd, drill_state_t *state,
     case 1:
 	stats->M01++;
 	break;
+    case 15:
+	stats->M15++;
+	break;
+    case 16:
+	stats->M16++;
+	break;
+    case 17:
+	stats->M17++;
+	break;
     case 18:
 	stats->M18++;
 	break;
@@ -1760,6 +1849,7 @@ new_state(drill_state_t *state)
 	state->header_number_format = state->number_format = FMT_00_0000; /* i. e. INCH */
 	state->autod = 1;
 	state->decimals = 4;
+	state->drill_slot = 0;
     }
 
     return state;

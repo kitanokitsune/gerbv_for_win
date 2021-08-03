@@ -1281,6 +1281,9 @@ callbacks_analyze_active_gerbers_activate(GtkMenuItem *menuitem,
 	table_add_row(M_table, "M00", stat->M0, _(gerber_m_code_name(0)));
 	table_add_row(M_table, "M01", stat->M1, _(gerber_m_code_name(1)));
 	table_add_row(M_table, "M02", stat->M2, _(gerber_m_code_name(2)));
+	table_add_row(M_table, "M15", stat->M15, _("Z-axis route position"));
+	table_add_row(M_table, "M16", stat->M16, _("Retract with clamping"));
+	table_add_row(M_table, "M17", stat->M17, _("Retract without clamping"));
 	table_add_row(M_table, "", stat->M_unknown, _("unknown M-codes"));
 
 	table_set_sortable(M_table);

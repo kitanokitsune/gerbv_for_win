@@ -32,8 +32,14 @@ Create [your language file (.po)](./src/po), then convert it to **gerbv.mo** and
 This package is based on the source code which was obtained from **git.geda-project.org**.  
 [http://git.geda-project.org/gerbv/tree/?id=b5f1eacd798f327ab319af939f89031db4b7c10a](http://git.geda-project.org/gerbv/tree/?id=b5f1eacd798f327ab319af939f89031db4b7c10a)  
 
-I fixed the above source code by the following patch. The result source is in [src](./src) directory.  
-**Patch contents**
+I fixed the above source code by the following patches. The result source is in [src](./src) directory.  
+
+**List of applied patches:**
++ [(Bug Report #258) Gerbv routing command support](https://sourceforge.net/p/gerbv/bugs/258/ )
++ [#83 Crash may occur on opening/saveing files](https://sourceforge.net/p/gerbv/patches/83/ )
++ [#82 Spin control will not accept the keyboard input](https://sourceforge.net/p/gerbv/patches/82/ )
++ [#81 Fix casting pointer to different size integer](https://sourceforge.net/p/gerbv/patches/81/ )
++ [#80 Compilation error fix for duplicate enum variables](https://sourceforge.net/p/gerbv/patches/80/ )
 + [#79 Allow non-ASCII install path on MS-Windows](https://sourceforge.net/p/gerbv/patches/79/ )
 + [#78 Open non-ASCII filename](https://sourceforge.net/p/gerbv/patches/78/ )
 + [#77 Fix double-freeing memory](https://sourceforge.net/p/gerbv/patches/77/ )

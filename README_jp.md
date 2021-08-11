@@ -6,7 +6,21 @@ gEDA gerbv を Windows で動作するように修正したソースコードと
 <img src="./sample_jp.png" width="600px" alt="gerbv" title="gerbv">
 
 ## Overview
-[gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) のWindows実行用ファイル一式です。[32bit版](./32bit) と [64bit版](./64bit) があります。  
+[gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) に以下のパッチを適用したWindows実行用ファイル一式です。
+
++ [(Bug Report #258) Gerbv routing command support](https://sourceforge.net/p/gerbv/bugs/258/ )
++ [#83 Crash may occur on opening/saveing files](https://sourceforge.net/p/gerbv/patches/83/ )
++ [#82 Spin control will not accept the keyboard input](https://sourceforge.net/p/gerbv/patches/82/ )
++ [#81 Fix casting pointer to different size integer](https://sourceforge.net/p/gerbv/patches/81/ )
++ [#80 Compilation error fix for duplicate enum variables](https://sourceforge.net/p/gerbv/patches/80/ )
++ [#79 Allow non-ASCII install path on MS-Windows](https://sourceforge.net/p/gerbv/patches/79/ )
++ [#78 Open non-ASCII filename](https://sourceforge.net/p/gerbv/patches/78/ )
++ [#77 Fix double-freeing memory](https://sourceforge.net/p/gerbv/patches/77/ )
++ [#76 Allow 'gerbv foo.gvp' to act like 'gerbv -p foo.gvp' was specified](https://sourceforge.net/p/gerbv/patches/76/ )
++ [#75 Fix bounding box calculation for slots](https://sourceforge.net/p/gerbv/patches/75/ )
+
+
+実行ファイルとして [32bit版](./32bit) と [64bit版](./64bit) のバイナリを用意してあります。  
 ビルドには msys64 (mingw-w64) を使用しました。  
 
 
@@ -36,22 +50,10 @@ gerbv の日本語訳を直す場合は **ja.po** ファイルをテキストエ
 
 
 ## Source Code
+パッチ適用後のソースファイルは [src](./src) ディレクトリにあります。  
+
 本プログラムに使用したソースコードは、（この時点での最新版である）gEDA プロジェクトの git から clone した以下の版をベースにしています。  
 [http://git.geda-project.org/gerbv/tree/?id=b5f1eacd798f327ab319af939f89031db4b7c10a](http://git.geda-project.org/gerbv/tree/?id=b5f1eacd798f327ab319af939f89031db4b7c10a)  
-
-このソースに以下のパッチを当てました（パッチ適用後のソースファイルは [src](./src) ディレクトリにあります）。  
-
-**適用パッチ一覧:**
-+ [(Bug Report #258) Gerbv routing command support](https://sourceforge.net/p/gerbv/bugs/258/ )
-+ [#83 Crash may occur on opening/saveing files](https://sourceforge.net/p/gerbv/patches/83/ )
-+ [#82 Spin control will not accept the keyboard input](https://sourceforge.net/p/gerbv/patches/82/ )
-+ [#81 Fix casting pointer to different size integer](https://sourceforge.net/p/gerbv/patches/81/ )
-+ [#80 Compilation error fix for duplicate enum variables](https://sourceforge.net/p/gerbv/patches/80/ )
-+ [#79 Allow non-ASCII install path on MS-Windows](https://sourceforge.net/p/gerbv/patches/79/ )
-+ [#78 Open non-ASCII filename](https://sourceforge.net/p/gerbv/patches/78/ )
-+ [#77 Fix double-freeing memory](https://sourceforge.net/p/gerbv/patches/77/ )
-+ [#76 Allow 'gerbv foo.gvp' to act like 'gerbv -p foo.gvp' was specified](https://sourceforge.net/p/gerbv/patches/76/ )
-+ [#75 Fix bounding box calculation for slots](https://sourceforge.net/p/gerbv/patches/75/ )
 
 
 

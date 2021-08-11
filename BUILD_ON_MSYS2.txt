@@ -1,0 +1,33 @@
+How to build gerbv.exe on MSYS2 with MinGW-w64 gcc/g++
+
+* Note: Please replace "/home/user/dxflib-3.12.2-src" as appropriate.
+
+
+(0) Prerequisites
++ MSYS2 environment
++ MinGW-w64 gcc/g++ compiler (32bit or 64bit)
++ gtk+-2.0 library
++ cairo library
++ dxflib 3.12.2 source
+
+
+(1) Build a DXFLib library
+Extract a dxflib source (assume that the source directory is /home/user/dxflib-3.12.2-src)
+$ cd /home/user/dxflib-3.12.2-src
+$ mkdir -p dxflib
+$ cp -f src/*.h dxflib
+$ cd src
+$ rm -f libdxflib.a
+$ g++ -O2 -static -c dl_dxf.cpp -o dl_dxf.o
+$ g++ -O2 -static -c dl_writer_ascii.cpp -o dl_writer_ascii.o
+$ ar rvs libdxflib.a dl_dxf.o dl_writer_ascii.o
+$ ranlib libdxflib.a
+$ cp -f libdxflib.a ..
+
+
+(2) Build a gerbv.exe
+Go to gerbv source directory.
+$ ./configure --enable-dxf --disable-rpath --with-included-gettext --disable-update-desktop-database --enable-dependency-tracking --enable-static=yes CFLAGS="-O2 -I/home/user/dxflib-3.12.2-src -static" CXXFLAGS="-O2 -I/home/user/dxflib-3.12.2-src -static" LDFLAGS="-L/home/user/dxflib-3.12.2-src -s -static" LIBS="-lstdc++"
+$ make
+
+Despite configuring with "-static" options, gerbv.exe still requires some DLL files because MinGW-w64's gtk+2 is shared library.

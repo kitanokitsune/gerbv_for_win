@@ -6,7 +6,7 @@ Windows port of gEDA gerber viewer
 <img src="./sample.png" width="600px" alt="gerbv" title="gerbv">
 
 ## Overview
-A set of [gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) files for execution on MS-Windows to which the following patches are applied:
+This is a set of executables for MS-Windows that apply the following bug fixes to the original [gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) .
 
 + [(Bug Report #258) Gerbv routing command support](https://sourceforge.net/p/gerbv/bugs/258/ )
 + [#83 Crash may occur on opening/saveing files](https://sourceforge.net/p/gerbv/patches/83/ )

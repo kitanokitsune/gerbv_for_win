@@ -6,7 +6,7 @@ gEDA gerbv を Windows で動作するように修正したソースコードと
 <img src="./sample_jp.png" width="600px" alt="gerbv" title="gerbv">
 
 ## Overview
-[gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) に以下のパッチを適用したWindows実行用ファイル一式です。
+オリジナルの [gerbv 2.7.0](https://sourceforge.net/projects/gerbv/files/gerbv/gerbv-2.7.0/ ) に以下のバグフィックスが適用されたMS-Windows用実行ファイルのセットです。
 
 + [(Bug Report #258) Gerbv routing command support](https://sourceforge.net/p/gerbv/bugs/258/ )
 + [#83 Crash may occur on opening/saveing files](https://sourceforge.net/p/gerbv/patches/83/ )

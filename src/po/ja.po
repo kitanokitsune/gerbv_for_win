@@ -173,7 +173,7 @@ msgstr "無題"
 
 #: src/callbacks.c:554
 msgid "No layer is currently active"
-msgstr "現在アクティブなレイヤーはありません"
+msgstr "現在選択中のレイヤーはありません"
 
 #: src/callbacks.c:555
 msgid "Please select a layer and try again."
@@ -409,7 +409,7 @@ msgstr "不明"
 
 #: src/callbacks.c:1320
 msgid "No aperture definitions found in active Gerber file(s)!"
-msgstr "アクティブなガーバー・レイヤーにアパーチャの定義が見つかりません"
+msgstr "選択中のガーバー・レイヤーにアパーチャの定義が見つかりません"
 
 #: src/callbacks.c:1330
 msgid "D code"
@@ -469,7 +469,7 @@ msgstr "アパーチャ定義"
 
 #: src/callbacks.c:1463
 msgid "Aperture usage"
-msgstr "アパーチャ使用数"
+msgstr "アパーチャ利用統計"
 
 #: src/callbacks.c:1505
 msgid "No drill layers visible!"
@@ -523,7 +523,7 @@ msgstr "表示中レイヤーのドリル・レポート"
 
 #: src/callbacks.c:1748
 msgid "Drill usage"
-msgstr "ドリル利用数"
+msgstr "ドリル利用統計"
 
 #: src/callbacks.c:1806
 msgid "Do you want to close all open layers and quit the program?"
@@ -541,7 +541,7 @@ msgstr ""
 #: src/callbacks.c:1868
 #, c-format
 msgid ""
-"Gerbv 窶?a Gerber (RS-274/X) viewer\n"
+"Gerbv — a Gerber (RS-274/X) viewer\n"
 "\n"
 "Version %s\n"
 "Compiled on %s at %s\n"
@@ -552,7 +552,7 @@ msgid ""
 "  gEDA homepage: http://geda-project.org/\n"
 "  gEDA Wiki: http://wiki.geda-project.org/"
 msgstr ""
-"Gerbv 窶?ガーバー (RS-274/X) ビューア\n"
+"Gerbv — ガーバー (RS-274/X) ビューア\n"
 "\n"
 "バージョン: %s\n"
 "コンパイル日時: %s at %s\n"
@@ -565,9 +565,9 @@ msgstr ""
 
 #: src/callbacks.c:1882
 msgid ""
-"Gerbv 窶?a Gerber (RS-274/X) viewer\n"
+"Gerbv — a Gerber (RS-274/X) viewer\n"
 "\n"
-"Copyright (C) 2000窶?007 Stefan Petersen\n"
+"Copyright (C) 2000—2007 Stefan Petersen\n"
 "\n"
 "This program is free software: you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -2289,8 +2289,8 @@ msgid " (bottom)"
 msgstr ""
 
 #: src/interface.c:56
-msgid "Gerbv 窶?gEDA's Gerber Viewer"
-msgstr "Gerbv 窶?gEDA ガーバー・ビューア"
+msgid "Gerbv — gEDA's Gerber Viewer"
+msgstr "Gerbv — gEDA ガーバー・ビューア"
 
 #: src/interface.c:363
 msgid "_File"
@@ -2302,11 +2302,11 @@ msgstr "開く(_O)"
 
 #: src/interface.c:380
 msgid "_Save active layer"
-msgstr "アクティブなレイヤーを保存(_S)"
+msgstr "選択中のレイヤーを保存(_S)"
 
 #: src/interface.c:382
 msgid "Save the active layer"
-msgstr "アクティブなレイヤーを保存します"
+msgstr "選択中のレイヤーを保存します"
 
 #: src/interface.c:386
 msgid "Save active layer _as..."
@@ -2314,7 +2314,7 @@ msgstr "名前を付けてアクティブレイヤーを保存(_A)"
 
 #: src/interface.c:388
 msgid "Save the active layer to a new file"
-msgstr "アクティブなレイヤーを新規ファイルへ保存します"
+msgstr "選択中のレイヤーを新規ファイルへ保存します"
 
 #: src/interface.c:394
 msgid "_Revert all"
@@ -2370,7 +2370,7 @@ msgstr "D_XF..."
 
 #: src/interface.c:436
 msgid "Export active layer to a DXF file"
-msgstr "アクティブなレイヤーをDXFファイルへ保存します"
+msgstr "選択中のレイヤーをDXFファイルへ保存します"
 
 #: src/interface.c:442
 msgid "RS-274X (_Gerber)..."
@@ -2378,7 +2378,7 @@ msgstr "RS-274X ガーバー(_G)..."
 
 #: src/interface.c:445
 msgid "Export active layer to a RS-274X (Gerber) file"
-msgstr "アクティブなレイヤーをガーバー・ファイル(RS-274X)へ保存します"
+msgstr "選択中のレイヤーをガーバー・ファイル(RS-274X)へ保存します"
 
 #: src/interface.c:447
 msgid "RS-274X merge (Gerber)..."
@@ -2394,7 +2394,7 @@ msgstr "_Excellon ドリル..."
 
 #: src/interface.c:459
 msgid "Export active layer to an Excellon drill file"
-msgstr "アクティブなレイヤーをExcellonドリル・ファイルへ保存します"
+msgstr "選択中のレイヤーをExcellonドリル・ファイルへ保存します"
 
 #: src/interface.c:461
 msgid "Excellon drill merge..."
@@ -2410,7 +2410,7 @@ msgstr "_ISEL NCP ドリル..."
 
 #: src/interface.c:470
 msgid "Export active layer to an ISEL Automation NCP drill file"
-msgstr "アクティブなレイヤーを ISEL Automation NCP ドリル・ファイルへ保存します"
+msgstr "選択中のレイヤーを ISEL Automation NCP ドリル・ファイルへ保存します"
 
 #: src/interface.c:476
 msgid "gEDA P_CB (beta)..."
@@ -2418,7 +2418,7 @@ msgstr "gEDA P_CB (beta)..."
 
 #: src/interface.c:479
 msgid "Export active layer to a gEDA PCB file"
-msgstr "アクティブなレイヤーを gEDA PCB ファイルへ保存します"
+msgstr "選択中のレイヤーを gEDA PCB ファイルへ保存します"
 
 #: src/interface.c:486
 msgid "_New project"
@@ -2658,7 +2658,7 @@ msgstr "表示／非表示(_V)"
 
 #: src/interface.c:817
 msgid "Toggles the visibility of the active layer"
-msgstr "アクティブなレイヤーの表示／非表示を切り替えます"
+msgstr "選択中のレイヤーの表示／非表示を切り替えます"
 
 #: src/interface.c:820
 msgid "All o_n"
@@ -2682,7 +2682,7 @@ msgstr "色を反転(_I)"
 
 #: src/interface.c:836
 msgid "Invert the display polarity of the active layer"
-msgstr "アクティブなレイヤーの色を反転します"
+msgstr "選択中のレイヤーの色を反転します"
 
 #: src/interface.c:839
 msgid "_Change color"
@@ -2690,7 +2690,7 @@ msgstr "色を変更(_C)"
 
 #: src/interface.c:842
 msgid "Change the display color of the active layer"
-msgstr "アクティブなレイヤーの表示色を変更します"
+msgstr "選択中のレイヤーの表示色を変更します"
 
 #: src/interface.c:850
 msgid "_Reload layer"
@@ -2698,7 +2698,7 @@ msgstr "レイヤーを再読み込み"
 
 #: src/interface.c:852
 msgid "Reload the active layer from disk"
-msgstr "アクティブなレイヤーをディスクから再読み込みします"
+msgstr "選択中のレイヤーをディスクから再読み込みします"
 
 #: src/interface.c:857
 msgid "_Edit layer"
@@ -2706,7 +2706,7 @@ msgstr "レイヤーを編集(_E)"
 
 #: src/interface.c:860
 msgid "Translate, scale, rotate or mirror the active layer"
-msgstr "アクティブなレイヤーに対して平行移動、拡大縮小、回転、反転を行います"
+msgstr "レイヤーに対して平行移動、拡大縮小、回転、反転を行います"
 
 #: src/interface.c:864
 msgid "Edit file _format"
@@ -2722,7 +2722,7 @@ msgstr "上層へ移動(_P)"
 
 #: src/interface.c:877 src/interface.c:1193
 msgid "Move the active layer one step up"
-msgstr "アクティブレイヤーを一つ上の階層へ移動します"
+msgstr "選択中のレイヤーを一つ上の階層へ移動します"
 
 #: src/interface.c:883
 msgid "Move dow_n"
@@ -2730,7 +2730,7 @@ msgstr "下層へ移動(_N)"
 
 #: src/interface.c:885 src/interface.c:1185
 msgid "Move the active layer one step down"
-msgstr "アクティブレイヤーを一つ下の階層へ移動します"
+msgstr "選択中のレイヤーを一つ下の階層へ移動します"
 
 #: src/interface.c:891
 msgid "_Delete"
@@ -2738,7 +2738,7 @@ msgstr "削除(_D)"
 
 #: src/interface.c:893 src/interface.c:1201
 msgid "Remove the active layer"
-msgstr "アクティブレイヤーを削除します"
+msgstr "選択中のレイヤーを削除します"
 
 #: src/interface.c:906
 msgid "_Analyze"
@@ -2932,7 +2932,7 @@ msgstr "レイヤーの編集"
 
 #: src/interface.c:2321
 msgid "Apply to _active"
-msgstr "現在のレイヤーに適用(_A)"
+msgstr "選択中のレイヤーに適用(_A)"
 
 #: src/interface.c:2323
 msgid "Apply to _visible"

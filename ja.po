@@ -541,7 +541,7 @@ msgstr ""
 #: src/callbacks.c:1868
 #, c-format
 msgid ""
-"Gerbv 窶?a Gerber (RS-274/X) viewer\n"
+"Gerbv — a Gerber (RS-274/X) viewer\n"
 "\n"
 "Version %s\n"
 "Compiled on %s at %s\n"
@@ -552,7 +552,7 @@ msgid ""
 "  gEDA homepage: http://geda-project.org/\n"
 "  gEDA Wiki: http://wiki.geda-project.org/"
 msgstr ""
-"Gerbv 窶?ガーバー (RS-274/X) ビューア\n"
+"Gerbv — ガーバー (RS-274/X) ビューア\n"
 "\n"
 "バージョン: %s\n"
 "コンパイル日時: %s at %s\n"
@@ -565,9 +565,9 @@ msgstr ""
 
 #: src/callbacks.c:1882
 msgid ""
-"Gerbv 窶?a Gerber (RS-274/X) viewer\n"
+"Gerbv — a Gerber (RS-274/X) viewer\n"
 "\n"
-"Copyright (C) 2000窶?007 Stefan Petersen\n"
+"Copyright (C) 2000—2007 Stefan Petersen\n"
 "\n"
 "This program is free software: you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -2289,8 +2289,8 @@ msgid " (bottom)"
 msgstr ""
 
 #: src/interface.c:56
-msgid "Gerbv 窶?gEDA's Gerber Viewer"
-msgstr "Gerbv 窶?gEDA ガーバー・ビューア"
+msgid "Gerbv — gEDA's Gerber Viewer"
+msgstr "Gerbv — gEDA ガーバー・ビューア"
 
 #: src/interface.c:363
 msgid "_File"

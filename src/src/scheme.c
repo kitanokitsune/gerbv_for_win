@@ -16,7 +16,7 @@
     \brief The TinyScheme compiler
     \ingroup gerbv
 */
-
+#include <stdint.h>    /* uintptr_t */
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

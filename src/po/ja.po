@@ -340,14 +340,14 @@ msgstr "表示がオンのガーバー・レイヤーがありません！"
 msgid "No errors found in %d visible Gerber layer."
 msgid_plural "No errors found in %d visible Gerber layers."
 msgstr[0] "表示中の %d 個のガーバー・レイヤーには問題はありませんでした"
-msgstr[1] "表示中の %d 個のガーバー・レイヤーには問題はありませんでした"
+
 
 #: src/callbacks.c:1150
 #, c-format
 msgid "Found errors in %d visible Gerber layer."
 msgid_plural "Found errors in %d visible Gerber layers."
 msgstr[0] "表示中の %d 個のガーバー・レイヤーに問題が見つかりました"
-msgstr[1] "表示中の %d 個のガーバー・レイヤーに問題が見つかりました"
+
 
 #: src/callbacks.c:1168 src/callbacks.c:1329 src/callbacks.c:1535
 msgid "Layer"
@@ -480,14 +480,14 @@ msgstr "表示中のドリル・レイヤーがありません！"
 msgid "No errors found in %d visible drill layer."
 msgid_plural "No errors found in %d visible drill layers."
 msgstr[0] "表示中の %d 個のドリル・レイヤーには問題はありませんでした"
-msgstr[1] "表示中の %d 個のドリル・レイヤーには問題はありませんでした"
+
 
 #: src/callbacks.c:1517
 #, c-format
 msgid "Found errors found in %d visible drill layer."
 msgid_plural "Found errors found in %d visible drill layers."
 msgstr[0] "表示中の %d 個のドリル・レイヤーに問題が見つかりました"
-msgstr[1] "表示中の %d 個のドリル・レイヤーに問題が見つかりました"
+
 
 #: src/callbacks.c:1548
 msgid "Excellon file"
@@ -734,7 +734,7 @@ msgstr "オブジェクトが選択されていません。アクティブレイ
 msgid "%d object are currently selected"
 msgid_plural "%d objects are currently selected"
 msgstr[0] "%d 個のオブジェクトが選択されています"
-msgstr[1] "%d 個のオブジェクトが選択されています"
+
 
 #: src/callbacks.c:3631 src/callbacks.c:3637
 #, c-format

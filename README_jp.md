@@ -1,6 +1,6 @@
 [English](./README.md)  
 
-# gerbv 2.7.0 for Windows
+# gerbv 2.7.0 日本語版 for Windows
 gEDA gerbv を Windows で動作するように修正したソースコードと実行バイナリです。  
   
 <img src="./sample_jp.png" width="600px" alt="gerbv" title="gerbv">

@@ -1,4 +1,5 @@
 [English](./README.md)  
+#### 注意！ gerbv-2.7.0 には脆弱性 [TALOS-2021-1415](https://talosintelligence.com/vulnerability_reports/TALOS-2021-1415), [TALOS-2021-1416](https://talosintelligence.com/vulnerability_reports/TALOS-2021-1416) があるため、代わりに [gerbv-2.10.0](https://github.com/kitanokitsune/gervb_for_win_multilanguage/releases) を使ってください。
 
 # gerbv 2.7.0 日本語版 for Windows
 gEDA gerbv を Windows で動作するように修正したソースコードと実行バイナリです。  

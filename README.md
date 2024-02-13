@@ -1,5 +1,7 @@
 [日本語](./README_jp.md)  
 
+#### NOTE: Please do not use gerbv-2.7.0 because it is vulnerable [TALOS-2021-1415](https://talosintelligence.com/vulnerability_reports/TALOS-2021-1415), [TALOS-2021-1416](https://talosintelligence.com/vulnerability_reports/TALOS-2021-1416). Please use [gerbv-2.10.0](https://github.com/kitanokitsune/gervb_for_win_multilanguage/releases) instead.
+
 # gerbv 2.7.0 for Windows
 Windows port of gEDA gerber viewer
   
